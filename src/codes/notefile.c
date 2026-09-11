@@ -80,6 +80,12 @@ int main(int argc, char *argv[]) {
         printf("\033[1;1H");
         fflush(stdout);
     }
+    if (idx > 0 && test[idx - 1] != '\n') {
+    if (idx < 2047) {
+        test[idx] = '\n'; // En sona çaktırmadan bir yeni satır ekle
+        idx++;
+    }
+}
     else if (tusuYakala == CTRL_KEY('x')) {
         test[idx] = '\0';
         ekraniSil();
