@@ -27,8 +27,5 @@ $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
 
 clean:
-<<<<<<< HEAD
 	$(RM) $(TARGET)
-=======
-	$(RM) $(TARGET)
->>>>>>> 50daf86960bdf6769c2eaa1fed0ea493b12ef53d
+
