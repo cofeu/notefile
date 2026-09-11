@@ -100,15 +100,14 @@ int main(int argc, char *argv[]) {
             }
         }
     else if (tusuYakala == '\n' || tusuYakala == '\r') {
-        if (idx < 2047) {
-                test[idx] = '\n'; 
-                idx++;
-            }
+    if (idx < 2047) {
+        test[idx] = '\n'; 
+        idx++;
+    }
         printf("\r\n");
         fflush(stdout);
-
-
     }
+
     else {
             putchar(tusuYakala);
             fflush(stdout);
