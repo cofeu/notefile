@@ -46,8 +46,9 @@ int main(int argc, char *argv[]) {
     fflush(stdout);
     
     printf("\033[1;1H");
-    char test[2048];
-    int idx = 0;
+    char *test = NULL;
+    size_t idx = 0;
+    size_t kapasite = 0;
     char tusuYakala;
 
     fflush(stdout);
@@ -57,15 +58,27 @@ int main(int argc, char *argv[]) {
         int ch;
 
         while((ch = fgetc(okumaFp)) != EOF) {
-            if (idx < 2047) {
-                putchar(ch);
-                test[idx] = ch;
-                idx++;
-            }
+
+            if(idx + 1 >= kapasite) {
+                kapasite = (kapasite == 0) ? 1024 : kapasite * 2;
+                char *yeni = realloc(test, kapasite);
+
+                if (yeni == NULL) {
+                printf("HATA: Bellek yetersiz!\n");
+                free(test);
+                fclose(okumaFp);
+                return 1;
         }
-        fclose(okumaFp);
-        fflush(stdout);
-     }
+        test = yeni;
+    }
+    test[idx] = ch;
+    idx++;
+
+    putchar(ch);
+
+    
+}
+}
     
     while(1) {
         tusuYakala = getchar();
@@ -80,12 +93,6 @@ int main(int argc, char *argv[]) {
         printf("\033[1;1H");
         fflush(stdout);
     }
-    if (idx > 0 && test[idx - 1] != '\n') {
-    if (idx < 2047) {
-        test[idx] = '\n'; // En sona çaktırmadan bir yeni satır ekle
-        idx++;
-    }
-}
     else if (tusuYakala == CTRL_KEY('x')) {
         test[idx] = '\0';
         ekraniSil();
@@ -106,28 +113,55 @@ int main(int argc, char *argv[]) {
             }
         }
     else if (tusuYakala == '\n' || tusuYakala == '\r') {
-    if (idx < 2047) {
-        test[idx] = '\n'; 
-        idx++;
-    }
-        printf("\r\n");
-        fflush(stdout);
+
+    if (idx + 1 >= kapasite) {
+        kapasite = (kapasite == 0) ? 1024 : kapasite * 2;
+
+        char *yeni = realloc(test, kapasite);
+
+        if (yeni == NULL) {
+            printf("HATA: Bellek yetersiz!\n");
+            break;
+        }
+
+        test = yeni;
     }
 
+    test[idx] = '\n';
+    idx++;
+
+    printf("\r\n");
+    fflush(stdout);
+}
+
     else {
-            putchar(tusuYakala);
-            fflush(stdout);
-            if (idx < 2047) { 
-                test[idx] = tusuYakala; 
-                idx++;
-            }
+    if(idx + 1 >= kapasite) {
+        kapasite = (kapasite == 0) ? 1024 : kapasite * 2;
+
+        char *yeni = realloc(test, kapasite);
+
+        if (yeni == NULL) {
+            printf("Bellek yetersiz!\n");
+            break;
         }
+
+        test = yeni;
+    }
+
+    putchar(tusuYakala);
+    fflush(stdout);
+
+    test[idx] = tusuYakala;
+    idx++;
+}
     
     }
     
 
     
     tcsetattr(STDIN_FILENO, TCSANOW, &ayar1);
+
+    free(test);
 
     return 0;
 }
