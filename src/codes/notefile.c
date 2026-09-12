@@ -9,11 +9,11 @@
 
 
 #define CTRL_KEY(k) ((k) & 0x1F)
-struct termios orig_termios;
+struct termios note_rmios;
 
 void handle_sigint(int sig) {
     (void)sig;
-    tcsetattr(STDIN_FILENO, TCSANOW, &orig_termios);
+    tcsetattr(STDIN_FILENO, TCSANOW, &note_rmios);
     ekraniSil();
     printf("UYARI: Sigint yaparak programdan ciktiniz haberiniz olsun\n");
     printf("\n");
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
     ayar2 = ayar1;
 
     tcgetattr(STDIN_FILENO, &ayar1);
-    orig_termios = ayar1;
+    note_rmios = ayar1;
 
     
     ayar2.c_lflag &= ~(ECHO | ICANON);
