@@ -4,8 +4,7 @@
 #include <stdlib.h>
 
 static inline void ekraniSil(void) {
-    printf("\033[2J\033[1;1H");
+    printf("\033[2J\033[1;1H\033[3J");
 
-    // terminalin hepsini sil!
 }
 #endif
